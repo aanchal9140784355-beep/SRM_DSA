@@ -17,4 +17,213 @@ class Solution {
     }
 }
 -----------------------------------------------------------------------------------------------------------------------
+class Solution {
+    public int climbStairs(int n) {
+        if (n <= 2) {
+            return n;
+        }
+
+        int first = 1;  // ways for step 1
+        int second = 2; // ways for step 2
+
+        for (int i = 3; i <= n; i++) {
+            int current = first + second;
+            first = second;
+            second = current;
+        }
+
+        return second;
+    }
+}
+-----------------------------------------------------------------------------------------------------------------------
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(candidates, target, 0, new ArrayList<>(), result);
+        return result;
+    }
+
+    private void backtrack(int[] candidates, int target, int index,
+                           List<Integer> current, List<List<Integer>> result) {
+
+        if (target == 0) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+
+        if (index == candidates.length || target < 0) {
+            return;
+        }
+        current.add(candidates[index]);
+        backtrack(candidates, target - candidates[index], index, current, result);
+
+        
+        current.remove(current.size() - 1);
+
+        
+        backtrack(candidates, target, index + 1, current, result);
+    }
+}
+-------------------------------------------------------------------------------------------------------------------------
+
+class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        int left = 1;
+        int right = 0;
+
+        for (int pile : piles) {
+            right = Math.max(right, pile);
+        }
+
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+
+            if (canFinish(piles, h, mid)) {
+                right = mid; // try smaller speed
+            } else {
+                left = mid + 1; // need faster speed
+            }
+        }
+
+        return left;
+    }
+
+    private boolean canFinish(int[] piles, int h, int speed) {
+        long hours = 0;
+
+        for (int pile : piles) {
+            hours += (pile + speed - 1) / speed; // ceil(pile/speed)
+
+            if (hours > h) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+-------------------------------------------------------------------------------------------------------------------
+
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+
+        Arrays.sort(nums);
+
+        for (int i = 0; i < nums.length - 2; i++) {
+
+            // Skip duplicate first elements
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+
+            int left = i + 1;
+            int right = nums.length - 1;
+
+            while (left < right) {
+
+                int sum = nums[i] + nums[left] + nums[right];
+
+                if (sum == 0) {
+                    result.add(Arrays.asList(
+                            nums[i],
+                            nums[left],
+                            nums[right]
+                    ));
+
+                    left++;
+                    right--;
+
+                    // Skip duplicates
+                    while (left < right &&
+                           nums[left] == nums[left - 1]) {
+                        left++;
+                    }
+
+                    while (left < right &&
+                           nums[right] == nums[right + 1]) {
+                        right--;
+                    }
+
+                } else if (sum < 0) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+
+        return result;
+    }
+}
+---------------------------------------------------------------------------------------------------------------
+
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        int n = nums.length;
+
+        Arrays.sort(nums);
+
+        for (int i = 0; i < n - 3; i++) {
+
+            // Skip duplicates for first number
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+
+            for (int j = i + 1; j < n - 2; j++) {
+
+                // Skip duplicates for second number
+                if (j > i + 1 && nums[j] == nums[j - 1]) {
+                    continue;
+                }
+
+                int left = j + 1;
+                int right = n - 1;
+
+                while (left < right) {
+
+                    long sum = (long) nums[i]
+                             + nums[j]
+                             + nums[left]
+                             + nums[right];
+
+                    if (sum == target) {
+
+                        result.add(Arrays.asList(
+                                nums[i],
+                                nums[j],
+                                nums[left],
+                                nums[right]
+                        ));
+
+                        left++;
+                        right--;
+
+                        // Skip duplicates
+                        while (left < right &&
+                               nums[left] == nums[left - 1]) {
+                            left++;
+                        }
+
+                        while (left < right &&
+                               nums[right] == nums[right + 1]) {
+                            right--;
+                        }
+
+                    } else if (sum < target) {
+                        left++;
+                    } else {
+                        right--;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+}
+------------------------------------------------------------------------------------------------------------------------
+
 
